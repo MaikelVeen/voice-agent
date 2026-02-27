@@ -1,14 +1,11 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/MaikelVeen/voice-agent/internal/audio"
-	openai "github.com/openai/openai-go/v3"
-	"github.com/openai/openai-go/v3/option"
+	"github.com/MaikelVeen/voice-agent/internal/tts"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -56,22 +53,5 @@ func runSpeak(_ *cobra.Command, args []string) error {
 
 	voice := viper.GetString(argSpeakVoice)
 
-	client := openai.NewClient(option.WithAPIKey(apiKey))
-
-	res, err := client.Audio.Speech.New(context.Background(), openai.AudioSpeechNewParams{
-		Model:          openai.SpeechModelGPT4oMiniTTS,
-		Input:          text,
-		Voice:          openai.AudioSpeechNewParamsVoice(voice),
-		ResponseFormat: openai.AudioSpeechNewParamsResponseFormatPCM,
-	})
-	if err != nil {
-		return fmt.Errorf("requesting speech: %w", err)
-	}
-	defer res.Body.Close()
-
-	if err := audio.PlayPCM(res.Body); err != nil {
-		return fmt.Errorf("playing audio: %w", err)
-	}
-
-	return nil
+	return tts.Speak(apiKey, text, voice)
 }

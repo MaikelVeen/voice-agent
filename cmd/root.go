@@ -43,6 +43,7 @@ func Execute() {
 func init() {
 	rootCmd.AddCommand(NewVersionCommand().Command)
 	rootCmd.AddCommand(NewSpeakCommand().Command)
+	rootCmd.AddCommand(NewNotifyCommand().Command)
 
 	pflags := rootCmd.PersistentFlags()
 
