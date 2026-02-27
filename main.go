@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/MaikelVeen/voice-agent/cmd"
 	"github.com/MaikelVeen/voice-agent/internal/version"
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -12,6 +13,8 @@ var (
 )
 
 func main() {
+	_ = godotenv.Load()
+
 	version.Version = Version
 	version.Commit = Commit
 	version.Date = Date
