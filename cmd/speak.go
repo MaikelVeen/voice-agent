@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/MaikelVeen/voice-agent/internal/logging"
 	"github.com/MaikelVeen/voice-agent/internal/tts"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -53,5 +54,13 @@ func runSpeak(_ *cobra.Command, args []string) error {
 
 	voice := viper.GetString(argSpeakVoice)
 
-	return tts.Speak(apiKey, text, voice)
+	cwd, _ := os.Getwd()
+	entry := &logging.Entry{
+		Cwd:   cwd,
+		Text:  text,
+		Voice: voice,
+		Model: "gpt-4o-mini-tts",
+	}
+
+	return tts.Speak(apiKey, text, voice, entry)
 }

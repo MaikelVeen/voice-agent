@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/MaikelVeen/voice-agent/internal/logging"
 	"github.com/MaikelVeen/voice-agent/internal/tts"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -63,5 +64,15 @@ func runNotify(_ *cobra.Command, _ []string) error {
 
 	voice := viper.GetString(argSpeakVoice)
 
-	return tts.Speak(apiKey, payload.Message, voice)
+	entry := &logging.Entry{
+		SessionID:        payload.SessionID,
+		Cwd:              payload.Cwd,
+		HookEventName:    payload.HookEventName,
+		NotificationType: payload.NotificationType,
+		Text:             payload.Message,
+		Voice:            voice,
+		Model:            "gpt-4o-mini-tts",
+	}
+
+	return tts.Speak(apiKey, payload.Message, voice, entry)
 }
