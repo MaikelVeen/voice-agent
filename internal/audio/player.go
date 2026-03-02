@@ -33,3 +33,26 @@ func PlayPCM(pcm io.Reader) error {
 
 	return nil
 }
+
+func PlayPCMWithFormat(pcm io.Reader, sampleRate, channels int) error {
+	otoCtx, readyChan, err := oto.NewContext(&oto.NewContextOptions{
+		SampleRate:   sampleRate,
+		ChannelCount: channels,
+		Format:       oto.FormatSignedInt16LE,
+	})
+	if err != nil {
+		return fmt.Errorf("initializing audio context: %w", err)
+	}
+	<-readyChan
+
+	player := otoCtx.NewPlayer(pcm)
+	player.Play()
+	for player.IsPlaying() {
+		time.Sleep(time.Millisecond)
+	}
+
+	// Same hardware drain buffer concern as PlayPCM — see comment above.
+	time.Sleep(300 * time.Millisecond)
+
+	return nil
+}

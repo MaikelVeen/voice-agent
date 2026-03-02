@@ -44,6 +44,7 @@ func init() {
 	rootCmd.AddCommand(NewVersionCommand().Command)
 	rootCmd.AddCommand(NewSpeakCommand().Command)
 	rootCmd.AddCommand(NewNotifyCommand().Command)
+	rootCmd.AddCommand(NewPlayCommand().Command)
 
 	pflags := rootCmd.PersistentFlags()
 
